@@ -1,2 +1,19 @@
-<h1>Posts#index</h1>
-<p>Find me in app/views/posts/index.html.erb</p>
+<h1>みんなの釣果</h1>
+
+<% if user_signed_in? %>
+  <%= link_to "新規投稿する", new_post_path, class: "btn btn-success mb-3" %>
+<% else %>
+  <p>投稿するにはログインが必要です</p>
+<% end %>
+
+<% @posts.each do |post| %>
+  <div class="card mb-3">
+    <% if post.image.attached? %>
+      <%= image_tag post.image, class: "card-img-top", style: "max-height: 300px; object-fit: cover;" %>
+    <% end %>
+    <div class="card-body">
+      <p class="card-text"><%= post.text %></p>
+      <p class="card-text"><small class="text-muted">投稿者: <%= post.user.nickname %></small></p>
+    </div>
+  </div>
+<% end %>
