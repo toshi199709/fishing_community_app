@@ -7,11 +7,18 @@
 <% end %>
 
 <h2>投稿マップ</h2>
+<!-- 🔽 投稿位置と画像を含めたデータを埋め込み -->
 <div id="index-map"
      style="height: 400px;"
-     data-posts='<%= raw @posts_with_location.to_json(only: [:latitude, :longitude]) %>'>
+     data-posts='<%= raw @posts_with_location.map { |post|
+       {
+         id: post.id,
+         latitude: post.latitude,
+         longitude: post.longitude,
+         image_url: url_for(post.image) # 🔽 新規追加：画像URLも渡す
+       }
+     }.to_json %>'>
 </div>
-
 
 <% @posts.each do |post| %>
   <div class="card mb-3">

@@ -1,3 +1,4 @@
+// ✅ 投稿一覧ページの地図表示（ホバーで画像プレビュー表示）
 let indexMap;
 
 window.initIndexMap = function () {
@@ -9,17 +10,32 @@ window.initIndexMap = function () {
     zoom: 5,
   });
 
-  // 位置情報を埋め込んだデータセット
   const posts = JSON.parse(mapElement.dataset.posts);
 
   posts.forEach((post) => {
-    new google.maps.Marker({
+    if (!post.latitude || !post.longitude) return;
+
+    const marker = new google.maps.Marker({
       position: { lat: post.latitude, lng: post.longitude },
       map: indexMap,
+    });
+
+    // ✅ InfoWindow に画像を埋め込む
+    const infoWindow = new google.maps.InfoWindow({
+      content: `<img src="${post.image_url}" alt="釣果画像" style="width: 120px; height: auto;">` // 画像を表示
+    });
+
+    // ✅ マウスホバー時に表示、離れたら非表示
+    marker.addListener("mouseover", () => {
+      infoWindow.open(indexMap, marker);
+    });
+    marker.addListener("mouseout", () => {
+      infoWindow.close();
     });
   });
 };
 
+// ✅ Turboページ遷移対応
 document.addEventListener("turbo:load", () => {
   if (typeof google !== "undefined" && typeof google.maps !== "undefined") {
     initIndexMap();
