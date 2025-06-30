@@ -1,4 +1,4 @@
-// ✅ 投稿一覧ページの地図表示（ホバーで画像プレビュー表示）
+// ✅ 投稿一覧ページの地図表示（画像だけ表示、クリックで遷移）
 let indexMap;
 
 window.initIndexMap = function () {
@@ -20,22 +20,30 @@ window.initIndexMap = function () {
       map: indexMap,
     });
 
-    // ✅ InfoWindow に画像を埋め込む
+    // ✅ InfoWindow（画像のみ表示）【修正】
     const infoWindow = new google.maps.InfoWindow({
-      content: `<img src="${post.image_url}" alt="釣果画像" style="width: 120px; height: auto;">` // 画像を表示
+      content: `
+        <div style="text-align: center;">
+          <img src="${post.image_url}" alt="釣果画像" style="width: 120px; height: auto; display: block; margin: auto;">
+        </div>
+      `
     });
 
-    // ✅ マウスホバー時に表示、離れたら非表示
+    // ✅ ピンにマウスを載せたら画像表示
     marker.addListener("mouseover", () => {
       infoWindow.open(indexMap, marker);
     });
     marker.addListener("mouseout", () => {
       infoWindow.close();
     });
+
+    // ✅ ピンをクリックしたら投稿ページに遷移（新規追加）
+    marker.addListener("click", () => {
+      window.location.href = `/posts/${post.id}`;
+    });
   });
 };
 
-// ✅ Turboページ遷移対応
 document.addEventListener("turbo:load", () => {
   if (typeof google !== "undefined" && typeof google.maps !== "undefined") {
     initIndexMap();
