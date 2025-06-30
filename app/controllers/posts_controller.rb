@@ -3,6 +3,7 @@ class PostsController < ApplicationController
 
   def index
     @posts = Post.all.order(created_at: :desc)
+    @posts_with_location = @posts.select { |p| p.latitude.present? && p.longitude.present? }
   end
 
   def new

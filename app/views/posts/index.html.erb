@@ -6,6 +6,13 @@
   <p>投稿するにはログインが必要です</p>
 <% end %>
 
+<h2>投稿マップ</h2>
+<div id="index-map"
+     style="height: 400px;"
+     data-posts='<%= raw @posts_with_location.to_json(only: [:latitude, :longitude]) %>'>
+</div>
+
+
 <% @posts.each do |post| %>
   <div class="card mb-3">
     <% if post.image.attached? %>
