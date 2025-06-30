@@ -1,0 +1,24 @@
+<h1>釣果を投稿</h1>
+
+<%= form_with(model: @post, local: true, html: { multipart: true }) do |f| %>
+
+  <!-- ✅ 地図と位置情報入力もここに含める！ -->
+  <div class="mb-3">
+    <%= f.label :location, "釣れた場所を地図から選択" %><br>
+    <div id="map" style="height: 400px;"></div>
+    <%= f.hidden_field :latitude %>
+    <%= f.hidden_field :longitude %>
+  </div>
+  
+  <div class="mb-3">
+    <%= f.label :image, "釣れた魚の写真" %><br>
+    <%= f.file_field :image %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :text, "コメント" %><br>
+    <%= f.text_area :text, rows: 5, class: "form-control" %>
+  </div>
+
+  <%= f.submit "投稿する", class: "btn btn-primary" %>
+<% end %>

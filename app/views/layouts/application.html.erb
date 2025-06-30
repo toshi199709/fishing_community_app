@@ -1,16 +1,49 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>FishingCommunityApp</title>
+    <title>FishTrail</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+
+    <!-- Google Maps API -->
+    <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=AIzaSyD1GLnINEghIo9Pu9lKGr6dTg-qusJ7MvI&callback=initIndexMap", async: true, defer: true %>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" defer></script>
+
+    <!-- 💬 追加CSS -->
+    <style>
+      body {
+        background-color: #2c2f33;
+        color: #ffffff;
+      }
+
+      header {
+        background-color: #1a1c1e;
+        padding: 1rem;
+        text-align: center;
+      }
+
+      .logo-title {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #ffffff;
+        letter-spacing: 1px;
+      }
+    </style>
   </head>
 
   <body>
+    <!-- ✅ 追加：ロゴ付きのヘッダー -->
+    <header>
+      <div class="logo-title">FishTrail</div>
+    </header>
+
     <%= yield %>
   </body>
 </html>
