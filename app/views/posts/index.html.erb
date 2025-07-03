@@ -1,37 +1,56 @@
-<!-- 🔽 投稿マップセクション -->
+<!-- ✅ Cesium地球儀を表示するdiv -->
+<div id="cesiumContainer" style="width: 100%; height: 500px; margin-bottom: 2rem;"></div>
+
+<!-- ✅ CesiumJS CSS & JS（このページだけで読み込む） -->
+<link href="https://cesium.com/downloads/cesiumjs/releases/1.117/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<script src="https://cesium.com/downloads/cesiumjs/releases/1.117/Build/Cesium/Cesium.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  console.log("✅ DOMContentLoaded - Cesium init");
+
+  Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0YTZhZDMyMC0xN2RjLTRiNTctYTFjNy00ZThlY2I3MDhhMDkiLCJpZCI6MzE3ODIzLCJpYXQiOjE3NTE0NjAyNTl9.eNVckdonMYjdXfgZR5nkAPgS3rhY8fxfxHqGwLAoSOs';
+
+  const viewer = new Cesium.Viewer('cesiumContainer', {
+    terrain: Cesium.Terrain.fromWorldTerrain(),
+    baseLayerPicker: false,
+    animation: false,
+    timeline: false
+  });
+
+  // imageryProvider は設定不要。Cesium が自動で衛星写真を表示する
+
+  viewer.camera.setView({
+    destination: Cesium.Cartesian3.fromDegrees(
+      139.6917,  // 経度: 東京
+      35.6895,   // 緯度: 東京
+      3000000    // 高度: 3,000km
+    ),
+    orientation: {
+      heading: 0,
+      pitch: -Math.PI / 2,  // 真下
+      roll: 0
+    }
+  });
+});
+</script>
+
+
+<!-- 投稿マップセクション -->
 <section class="bg-dark text-white py-4">
-  <div class="container text-center">
+  <div class="text-center">
     <% if user_signed_in? %>
       <%= link_to "新規投稿する", new_post_path, class: "btn btn-success mb-3" %>
     <% else %>
       <p>投稿するにはログインが必要です</p>
     <% end %>
-
-    <h2 class="mb-4">投稿マップ</h2>
-
-    <!-- ✅ 丸型マップに修正 -->
-    <div class="d-flex justify-content-center">
-      <div id="index-map"
-           style="height: 400px; width: 400px; border-radius: 50%; overflow: hidden;"
-           data-posts='<%= raw @posts_with_location.map { |post|
-             {
-               id: post.id,
-               latitude: post.latitude,
-               longitude: post.longitude,
-               image_url: url_for(post.image)
-             }
-           }.to_json %>'>
-      </div>
-    </div>
   </div>
 </section>
 
-<!-- 🔽 投稿スライダーセクション -->
+<!-- 投稿スライダー -->
 <section class="bg-secondary text-white py-4">
   <div class="container">
     <h2 class="mb-3">投稿一覧</h2>
-
-    <!-- ✅ 横スクロールスライダー -->
     <div class="d-flex overflow-auto gap-3 px-2 pb-3">
       <% @posts.each do |post| %>
         <div class="card bg-dark text-white flex-shrink-0" style="width: 260px; border-radius: 15px;">

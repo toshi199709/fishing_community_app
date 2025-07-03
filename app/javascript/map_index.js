@@ -1,51 +1,37 @@
-// ✅ 投稿一覧ページの地図表示（画像だけ表示、クリックで遷移）
-let indexMap;
+window.initGlobe = () => {
+  const container = document.getElementById("globe-container");
+  if (!container) return;
 
-window.initIndexMap = function () {
-  const mapElement = document.getElementById("index-map");
-  if (!mapElement) return;
+  const postData = JSON.parse(container.dataset.posts || "[]");
 
-  indexMap = new google.maps.Map(mapElement, {
-    center: { lat: 35.681236, lng: 139.767125 },
-    zoom: 5,
-  });
+  const globe = Globe()(container)
+    // ✅ 高精細なNASAの地球画像（青い地球・雲あり）
+    .globeImageUrl("https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-night.jpg")
+    .backgroundColor("#000011")
+    .pointsData(postData)
+    .pointLat(d => d.lat)
+    .pointLng(d => d.lng)
+    .pointAltitude(0.03)
+    .pointColor(() => "orange")
+    .pointRadius(0.4)
+    .onPointClick(d => window.location.href = d.url);
 
-  const posts = JSON.parse(mapElement.dataset.posts);
+  setTimeout(() => {
+    const canvas = container.querySelector("canvas");
+    if (canvas) {
+      canvas.style.display = "block";
+    }
 
-  posts.forEach((post) => {
-    if (!post.latitude || !post.longitude) return;
+    globe.pointOfView({ lat: 30, lng: 135, altitude: 2 }, 0);
 
-    const marker = new google.maps.Marker({
-      position: { lat: post.latitude, lng: post.longitude },
-      map: indexMap,
-    });
-
-    // ✅ InfoWindow（画像のみ表示）【修正】
-    const infoWindow = new google.maps.InfoWindow({
-      content: `
-        <div style="text-align: center;">
-          <img src="${post.image_url}" alt="釣果画像" style="width: 120px; height: auto; display: block; margin: auto;">
-        </div>
-      `
-    });
-
-    // ✅ ピンにマウスを載せたら画像表示
-    marker.addListener("mouseover", () => {
-      infoWindow.open(indexMap, marker);
-    });
-    marker.addListener("mouseout", () => {
-      infoWindow.close();
-    });
-
-    // ✅ ピンをクリックしたら投稿ページに遷移（新規追加）
-    marker.addListener("click", () => {
-      window.location.href = `/posts/${post.id}`;
-    });
-  });
+    const controls = globe.controls();
+    controls.setAzimuthalAngle(0);
+    controls.update();
+  }, 100);
 };
 
 document.addEventListener("turbo:load", () => {
-  if (typeof google !== "undefined" && typeof google.maps !== "undefined") {
-    initIndexMap();
+  if (typeof window.initGlobe === "function") {
+    window.initGlobe();
   }
 });

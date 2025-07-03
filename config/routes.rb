@@ -1,7 +1,8 @@
+# config/routes.rb
 Rails.application.routes.draw do
   devise_for :users
 
-  resources :posts, only: [:new, :create, :index]
+  resources :posts, only: [:new, :create, :index, :show] # ← :show を追加！
 
-  root "posts#index"  # ← トップページを一覧に
+  root "posts#index"
 end
